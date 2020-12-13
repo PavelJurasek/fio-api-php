@@ -21,10 +21,17 @@ class Downloader
     /** @var ?ClientInterface */
     protected $client;
 
-    public function __construct(string $token, ClientInterface $client = null)
-    {
+    /** @var string|null */
+    private $savePath;
+
+    public function __construct(
+        string $token,
+        \GuzzleHttp\ClientInterface $client = null,
+        ?string $savePath = null
+    ) {
         $this->urlBuilder = new UrlBuilder($token);
         $this->client = $client;
+        $this->savePath = $savePath;
     }
 
     public function getClient(): ClientInterface
@@ -35,6 +42,30 @@ class Downloader
             ]);
         }
         return $this->client;
+    }
+
+    public function downloadPdf(int $year, int $month): string
+    {
+        if ($this->savePath === null) {
+            throw new \LogicException('$savePath must be configured to download PDF files.');
+        }
+
+        $url = $this->urlBuilder->buildPdf($year, $month);
+
+        $file = $this->savePath . \sprintf('/transaction_%d_%d_%s.pdf', $year, $month, \uniqid('', true));
+
+        $client = $this->getClient();
+
+        try {
+            /** @var ResponseInterface $response */
+            $client->request('GET', $url, [
+                'sink' => $file,
+            ]);
+        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+            $this->handleException($e);
+        }
+
+        return $file;
     }
 
     public function downloadFromTo(\DateTimeInterface $from, \DateTimeInterface $to): TransactionList
