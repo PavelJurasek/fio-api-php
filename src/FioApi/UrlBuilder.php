@@ -58,4 +58,14 @@ class UrlBuilder
             $id
         );
     }
+
+    public function buildPdf(int $year, int $month): string
+    {
+        return sprintf(
+            self::BASE_URL . 'by-id/%s/%d/%d/transactions.pdf',
+            $this->getToken(),
+            $year,
+            $month
+        );
+    }
 }
