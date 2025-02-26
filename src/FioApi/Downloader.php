@@ -26,7 +26,7 @@ class Downloader
 
     public function __construct(
         string $token,
-        \GuzzleHttp\ClientInterface $client = null,
+        ?\GuzzleHttp\ClientInterface $client = null,
         ?string $savePath = null
     ) {
         $this->urlBuilder = new UrlBuilder($token);
