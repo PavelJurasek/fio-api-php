@@ -28,10 +28,50 @@ foreach ($transactionList->getTransactions() as $transaction) {
 #### Available endpoints:
 - `downloadFromTo(DateTimeInterface $from, DateTimeInterface $to): TransactionList`
 - `downloadSince(DateTimeInterface $since): TransactionList`
-- `downloadStatement(int $year, int $id): TransactionList` - downloads an official statement
-- `downloadLastStatement(): array` - returns `['year' => int, 'id' => int]` of the last official statement, use it as `downloadStatement(...$downloader->downloadLastStatement())`
+- `downloadStatement(int $year, int $id): TransactionList` - downloads an official statement, see [Official statements](#official-statements)
+- `downloadPdf(int $year, int $id): string` - saves an official statement as a PDF file and returns its path, see [Official statements](#official-statements)
+- `downloadLastStatement(): array` - returns `['year' => int, 'id' => int]` of the newest official statement
 - `downloadLast(): TransactionList`
 - `setLastId(string $id)` - sets the last downloaded ID through the API
+
+Official statements
+-------------------
+The bank numbers the official statements in each year, from 1. The `$id` parameter of
+`downloadStatement()` and `downloadPdf()` is this statement number. **It is not the month.**
+
+The number is equal to the month only if the account has monthly statements and existed for the full year.
+If the account was opened during the year, or if it has statements more or less often than monthly,
+the numbers are different. For example, in the Fio API documentation, statement 3 of 2012 is for August 2012.
+
+How to find the statement numbers:
+- **The newest statement:** `downloadLastStatement()` returns its year and number,
+  for example `['year' => 2026, 'id' => 10]`. In that year, statements 1 to 10 exist.
+- **The statements of an earlier year:** the API has no call that lists them. Start at 1 and increase the number
+  until the request fails. The Fio API documentation does not say which error the API returns
+  for a statement number that does not exist.
+- **The period of a statement:** download it with `downloadStatement()` and read
+  `getDateStart()` and `getDateEnd()` of the result.
+
+The API accepts one call for each token every 30 seconds. A faster call causes a `TooGreedyException`.
+
+```php
+<?php
+// The third argument is the directory for the PDF files
+$downloader = new FioApi\Downloader('TOKEN@todo', null, __DIR__ . '/statements');
+
+$last = $downloader->downloadLastStatement(); // ['year' => 2026, 'id' => 10]
+
+// Find the period of each statement in the newest year
+for ($id = 1; $id <= $last['id']; $id++) {
+    sleep(30);
+    $statement = $downloader->downloadStatement($last['year'], $id);
+    printf("%d: %s - %s\n", $id, $statement->getDateStart()->format('Y-m-d'), $statement->getDateEnd()->format('Y-m-d'));
+}
+
+// Save the newest statement as a PDF file
+sleep(30);
+$file = $downloader->downloadPdf(...$last);
+```
 
 Saving real API responses
 -------------------------
@@ -66,6 +106,7 @@ Changelog
 - added `TransactionList::getYearList()` and `TransactionList::getIdList()`
 - added `Downloader::downloadStatement()` for official statements (`by-id` endpoint)
 - added `Downloader::downloadLastStatement()` (`lastStatement` endpoint)
+- added `Downloader::downloadPdf()` to save an official statement as a PDF file
 - added `bin/save-responses.php` to save raw API responses
 
 ## 5.0.0 (2024-06-07)

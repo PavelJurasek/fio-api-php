@@ -56,4 +56,13 @@ class UrlBuilderTest extends \PHPUnit\Framework\TestCase
             $urlBuilder->buildLastStatementUrl()
         );
     }
+
+    public function testBuildPdfUrlReturnValidUrl(): void
+    {
+        $urlBuilder = new UrlBuilder('token1');
+        Assert::assertSame(
+            'https://fioapi.fio.cz/v1/rest/by-id/token1/2012/3/transactions.pdf',
+            $urlBuilder->buildPdf(2012, 3)
+        );
+    }
 }

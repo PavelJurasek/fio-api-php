@@ -44,15 +44,22 @@ class Downloader
         return $this->client;
     }
 
-    public function downloadPdf(int $year, int $month): string
+    /**
+     * Saves an official statement as a PDF file into $savePath (set it in the constructor).
+     *
+     * @param int $id Statement number in the given year (it starts at 1 each year). It is not the month.
+     *                Use downloadLastStatement() to get the newest year and number.
+     * @return string Path of the saved file
+     */
+    public function downloadPdf(int $year, int $id): string
     {
         if ($this->savePath === null) {
             throw new \LogicException('$savePath must be configured to download PDF files.');
         }
 
-        $url = $this->urlBuilder->buildPdf($year, $month);
+        $url = $this->urlBuilder->buildPdf($year, $id);
 
-        $file = $this->savePath . \sprintf('/transaction_%d_%d_%s.pdf', $year, $month, \uniqid('', true));
+        $file = $this->savePath . \sprintf('/transaction_%d_%d_%s.pdf', $year, $id, \uniqid('', true));
 
         $client = $this->getClient();
 
@@ -78,6 +85,10 @@ class Downloader
         return $this->downloadFromTo($since, new \DateTimeImmutable());
     }
 
+    /**
+     * @param int $id Statement number in the given year (it starts at 1 each year). It is not the month.
+     *                Use downloadLastStatement() to get the newest year and number.
+     */
     public function downloadStatement(int $year, int $id): TransactionList
     {
         $url = $this->urlBuilder->buildByIdUrl($year, $id);
@@ -85,6 +96,8 @@ class Downloader
     }
 
     /**
+     * Returns the year and number of the newest official statement. In that year, statements 1 to "id" exist.
+     *
      * @return array{year: int, id: int}
      */
     public function downloadLastStatement(): array
