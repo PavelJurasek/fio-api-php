@@ -99,6 +99,43 @@ class DownloaderTest extends \PHPUnit\Framework\TestCase
         Assert::assertSame(8, $transactionList->getIdList());
     }
 
+    public function testDownloaderDownloadsLastStatement(): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+
+        $handler = HandlerStack::create(new MockHandler([
+            new Response(200, [], '2026,10'),
+        ]));
+        $handler->push($history);
+        $downloader = new Downloader('validToken', new Client(['handler' => $handler]));
+
+        Assert::assertSame(['year' => 2026, 'id' => 10], $downloader->downloadLastStatement());
+
+        Assert::assertIsArray($container);
+        Assert::assertCount(1, $container);
+
+        /** @var \GuzzleHttp\Psr7\Request $request */
+        $request = $container[0]['request'];
+
+        Assert::assertSame(
+            'https://fioapi.fio.cz/v1/rest/lastStatement/validToken/statement',
+            (string) $request->getUri()
+        );
+    }
+
+    public function testUnexpectedLastStatementResponseResultsInException(): void
+    {
+        $handler = HandlerStack::create(new MockHandler([
+            new Response(200, [], 'unexpected'),
+        ]));
+        $downloader = new Downloader('validToken', new Client(['handler' => $handler]));
+
+        $this->expectException(\UnexpectedValueException::class);
+
+        $downloader->downloadLastStatement();
+    }
+
     public function testDownloaderSetsLastId(): void
     {
         $container = [];

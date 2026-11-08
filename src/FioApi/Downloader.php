@@ -54,6 +54,28 @@ class Downloader
         return $this->downloadTransactionsList($url);
     }
 
+    /**
+     * @return array{year: int, id: int}
+     */
+    public function downloadLastStatement(): array
+    {
+        $body = '';
+
+        try {
+            $response = $this->getClient()->request('get', $this->urlBuilder->buildLastStatementUrl());
+            $body = $response->getBody()->getContents();
+        } catch (BadResponseException $e) {
+            $this->handleException($e);
+        }
+
+        // The API returns plain text "<year>,<id>"
+        if (preg_match('/^(\d{4}),(\d+)$/', trim($body), $matches) !== 1) {
+            throw new \UnexpectedValueException(sprintf('Unexpected lastStatement response "%s"', $body));
+        }
+
+        return ['year' => (int) $matches[1], 'id' => (int) $matches[2]];
+    }
+
     public function downloadLast(): TransactionList
     {
         $url = $this->urlBuilder->buildLastUrl();

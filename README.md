@@ -29,6 +29,7 @@ foreach ($transactionList->getTransactions() as $transaction) {
 - `downloadFromTo(DateTimeInterface $from, DateTimeInterface $to): TransactionList`
 - `downloadSince(DateTimeInterface $since): TransactionList`
 - `downloadStatement(int $year, int $id): TransactionList` - downloads an official statement
+- `downloadLastStatement(): array` - returns `['year' => int, 'id' => int]` of the last official statement, use it as `downloadStatement(...$downloader->downloadLastStatement())`
 - `downloadLast(): TransactionList`
 - `setLastId(string $id)` - sets the last downloaded ID through the API
 
@@ -64,6 +65,7 @@ Changelog
 - added `Transaction::getSenderBic()` (column26) and `Transaction::getPayerReference()` (column27)
 - added `TransactionList::getYearList()` and `TransactionList::getIdList()`
 - added `Downloader::downloadStatement()` for official statements (`by-id` endpoint)
+- added `Downloader::downloadLastStatement()` (`lastStatement` endpoint)
 - added `bin/save-responses.php` to save raw API responses
 
 ## 5.0.0 (2024-06-07)
