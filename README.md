@@ -33,7 +33,7 @@ foreach ($transactionList->getTransactions() as $transaction) {
 
 Requirements
 ------------
-Fio API PHP works with PHP 7.4 or higher.
+Fio API PHP works with PHP 8.2 or higher.
 
 Submitting bugs and feature requests
 ------------------------------------
@@ -47,6 +47,7 @@ Changelog
 ----------
 
 ## Unreleased
+- **BC break:** minimal supported version is PHP 8.2
 - **BC break:** requires `guzzlehttp/guzzle` `^7.15.2 || ^8.0.1` (Guzzle 6 and older Guzzle 7 versions have known security issues)
 
 ## 5.0.0 (2024-06-07)
