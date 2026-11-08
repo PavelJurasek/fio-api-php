@@ -8,23 +8,28 @@ jobs:
             fail-fast: false
             matrix:
                 operating-system: [ ubuntu-latest ]
-                php-versions: [ '7.4', '8.0', '8.1' ]
+                php-versions: [ '8.2', '8.3', '8.4', '8.5' ]
                 composer-dependencies: [ '', '--prefer-lowest' ]
                 extra-label: [ '' ]
                 include:
 
                     # Windows
-                    -   php-versions: '7.4'
+                    -   php-versions: '8.2'
                         operating-system: windows-latest
                         coverage: xdebug
 
                     # Windows
-                    -   php-versions: '8.0'
+                    -   php-versions: '8.3'
                         operating-system: windows-latest
                         coverage: xdebug
 
                     # Windows
-                    -   php-versions: '8.1'
+                    -   php-versions: '8.4'
+                        operating-system: windows-latest
+                        coverage: xdebug
+
+                    # Windows
+                    -   php-versions: '8.5'
                         operating-system: windows-latest
                         coverage: xdebug
 
@@ -34,7 +39,7 @@ jobs:
                 run: git config --global core.autocrlf false
 
             -   name: Checkout
-                uses: actions/checkout@v2
+                uses: actions/checkout@v7
 
             -   name: Setup PHP, with composer and extensions
                 uses: shivammathur/setup-php@v2 #https://github.com/shivammathur/setup-php
@@ -46,10 +51,11 @@ jobs:
 
             -   name: Get composer cache directory
                 id: composer-cache
-                run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+                shell: bash
+                run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
 
             -   name: Cache dependencies
-                uses: actions/cache@v2
+                uses: actions/cache@v6
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
                     key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
@@ -61,9 +67,12 @@ jobs:
             -   name: Run CI Build
                 run: composer ci
 
-            - name: Upload coverage results to Coveralls
-              env:
-                  COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: |
-                  composer global require php-coveralls/php-coveralls
-                  php-coveralls --coverage_clover=build/logs/clover.xml -v
+            # Only jobs with a coverage driver can make the clover report
+            -   name: Upload coverage results to Coveralls
+                if: ${{ matrix.coverage }}
+                env:
+                    COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                run: |
+                    composer test -- --coverage-clover build/logs/clover.xml
+                    composer global require php-coveralls/php-coveralls
+                    php-coveralls --coverage_clover=build/logs/clover.xml -v
