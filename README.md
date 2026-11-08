@@ -46,6 +46,9 @@ Martin Hujer - <https://www.martinhujer.cz>
 Changelog
 ----------
 
+## Unreleased
+- **BC break:** requires `guzzlehttp/guzzle` `^7.15.2 || ^8.0.1` (Guzzle 6 and older Guzzle 7 versions have known security issues)
+
 ## 5.0.0 (2024-06-07)
 - [#31](https://github.com/mhujer/fio-api-php/pull/31) add `composer/ca-bundle` as a required dependency instead of bundled root cert (thx @feldsam!)
 
