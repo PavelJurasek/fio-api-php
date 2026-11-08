@@ -19,8 +19,8 @@ class TransactionListTest extends \PHPUnit\Framework\TestCase
         Assert::assertEquals(new \DateTimeImmutable('2015-03-31+0200'), $transactionList->getDateEnd());
         Assert::assertNull($transactionList->getYearList());
         Assert::assertNull($transactionList->getIdList());
-        Assert::assertSame((float) 1111111111, $transactionList->getIdFrom());
-        Assert::assertSame((float) 1111111999, $transactionList->getIdTo());
+        Assert::assertSame(1111111111, $transactionList->getIdFrom());
+        Assert::assertSame(1111111999, $transactionList->getIdTo());
         Assert::assertNull($transactionList->getIdLastDownload());
     }
 

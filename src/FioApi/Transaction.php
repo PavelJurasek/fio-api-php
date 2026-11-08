@@ -53,7 +53,7 @@ class Transaction
     /** @var string|null */
     protected $comment;
 
-    /** @var float|null */
+    /** @var int|null */
     protected $paymentOrderId;
 
     /** @var string|null */
@@ -82,7 +82,7 @@ class Transaction
         string $transactionType,
         ?string $performedBy,
         ?string $comment,
-        ?float $paymentOrderId,
+        ?int $paymentOrderId,
         ?string $specification,
         ?string $senderBic,
         ?string $payerReference
@@ -220,7 +220,7 @@ class Transaction
         return $this->comment;
     }
 
-    public function getPaymentOrderId(): ?float
+    public function getPaymentOrderId(): ?int
     {
         return $this->paymentOrderId;
     }

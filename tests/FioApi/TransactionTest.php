@@ -29,7 +29,7 @@ class TransactionTest extends \PHPUnit\Framework\TestCase
         Assert::assertSame('Bezhotovostní příjem', $transaction->getTransactionType());
         Assert::assertNull($transaction->getPerformedBy());
         Assert::assertSame('Comment? Comment!', $transaction->getComment());
-        Assert::assertSame((float) 1111122222, $transaction->getPaymentOrderId());
+        Assert::assertSame(1111122222, $transaction->getPaymentOrderId());
         Assert::assertSame('1500.00 EUR', $transaction->getSpecification());
         Assert::assertSame('KOMBCZPPXXX', $transaction->getSenderBic());
         Assert::assertSame('2000000003', $transaction->getPayerReference());

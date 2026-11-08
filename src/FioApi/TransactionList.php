@@ -23,10 +23,10 @@ class TransactionList
     /** @var int|null */
     protected $idList;
 
-    /** @var float|null */
+    /** @var int|null */
     protected $idFrom;
 
-    /** @var float|null */
+    /** @var int|null */
     protected $idTo;
 
     /** @var int|null */
@@ -45,8 +45,8 @@ class TransactionList
         \DateTimeImmutable $dateEnd,
         ?int $yearList,
         ?int $idList,
-        ?float $idFrom,
-        ?float $idTo,
+        ?int $idFrom,
+        ?int $idTo,
         ?int $idLastDownload,
         Account $account
     ) {
@@ -134,12 +134,12 @@ class TransactionList
         return $this->idList;
     }
 
-    public function getIdFrom(): ?float
+    public function getIdFrom(): ?int
     {
         return $this->idFrom;
     }
 
-    public function getIdTo(): ?float
+    public function getIdTo(): ?int
     {
         return $this->idTo;
     }

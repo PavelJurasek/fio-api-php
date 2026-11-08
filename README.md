@@ -58,6 +58,7 @@ Changelog
 ----------
 
 ## Unreleased
+- **BC break:** `Transaction::getPaymentOrderId()`, `TransactionList::getIdFrom()` and `TransactionList::getIdTo()` return `?int` instead of `?float`
 - **BC break:** minimal supported version is PHP 8.2
 - **BC break:** requires `guzzlehttp/guzzle` `^7.15.2 || ^8.0.1` (Guzzle 6 and older Guzzle 7 versions have known security issues)
 - added `Transaction::getSenderBic()` (column26) and `Transaction::getPayerReference()` (column27)
