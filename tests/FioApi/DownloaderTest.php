@@ -86,6 +86,7 @@ class DownloaderTest extends \PHPUnit\Framework\TestCase
 
         $downloader->setLastId('123456');
 
+        Assert::assertIsArray($container);
         Assert::assertCount(1, $container);
 
         /** @var \GuzzleHttp\Psr7\Request $request */
