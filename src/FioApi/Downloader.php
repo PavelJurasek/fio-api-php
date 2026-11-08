@@ -57,7 +57,6 @@ class Downloader
         $client = $this->getClient();
 
         try {
-            /** @var ResponseInterface $response */
             $client->request('GET', $url, [
                 'sink' => $file,
             ]);
