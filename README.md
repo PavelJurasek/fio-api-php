@@ -32,6 +32,16 @@ foreach ($transactionList->getTransactions() as $transaction) {
 - `downloadLast(): TransactionList`
 - `setLastId(string $id)` - sets the last downloaded ID through the API
 
+Saving real API responses
+-------------------------
+To compare the real API format with the test fixtures, save raw responses with:
+
+```
+FIO_TOKEN=... php bin/save-responses.php [days=90] [outDir=responses]
+```
+
+It does not call the `last` endpoint, because that call moves the stop marker on the server.
+
 Requirements
 ------------
 Fio API PHP works with PHP 8.2 or higher.
@@ -53,6 +63,7 @@ Changelog
 - added `Transaction::getSenderBic()` (column26) and `Transaction::getPayerReference()` (column27)
 - added `TransactionList::getYearList()` and `TransactionList::getIdList()`
 - added `Downloader::downloadStatement()` for official statements (`by-id` endpoint)
+- added `bin/save-responses.php` to save raw API responses
 
 ## 5.0.0 (2024-06-07)
 - [#31](https://github.com/mhujer/fio-api-php/pull/31) add `composer/ca-bundle` as a required dependency instead of bundled root cert (thx @feldsam!)

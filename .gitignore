@@ -4,3 +4,4 @@ phpunit.xml
 composer.lock
 build/
 /.phpunit.cache/
+/responses/
