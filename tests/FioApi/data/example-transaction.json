@@ -72,10 +72,19 @@
     "name": "Komentář",
     "id": 25
   },
-  "column26": null,
+  "column26": {
+    "value": "KOMBCZPPXXX",
+    "name": "BIC",
+    "id": 26
+  },
   "column17": {
     "value": 1111122222,
     "name": "ID pokynu",
     "id": 17
+  },
+  "column27": {
+    "value": 2000000003,
+    "name": "Reference plátce",
+    "id": 27
   }
 }

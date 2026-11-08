@@ -59,6 +59,12 @@ class Transaction
     /** @var string|null */
     protected $specification;
 
+    /** @var string|null */
+    protected $senderBic;
+
+    /** @var string|null */
+    protected $payerReference;
+
     protected function __construct(
         string $id,
         \DateTimeImmutable $date,
@@ -77,7 +83,9 @@ class Transaction
         ?string $performedBy,
         ?string $comment,
         ?float $paymentOrderId,
-        ?string $specification
+        ?string $specification,
+        ?string $senderBic,
+        ?string $payerReference
     ) {
         $this->id = $id;
         $this->date = $date;
@@ -97,6 +105,8 @@ class Transaction
         $this->comment = $comment;
         $this->paymentOrderId = $paymentOrderId;
         $this->specification = $specification;
+        $this->senderBic = $senderBic;
+        $this->payerReference = $payerReference;
     }
 
     /**
@@ -123,7 +133,10 @@ class Transaction
             $data->column9 !== null ? $data->column9->value : null, //Provedl
             $data->column25 !== null ? $data->column25->value : null, //Komentář
             $data->column17 !== null ? $data->column17->value : null, //ID pokynu
-            $data->column18 !== null ? $data->column18->value : null //Upřesnění
+            $data->column18 !== null ? $data->column18->value : null, //Upřesnění
+            // Responses can omit these columns, and column27 can come as a number
+            $data->column26->value ?? null, //BIC
+            isset($data->column27->value) ? (string) $data->column27->value : null //Reference plátce
         );
     }
 
@@ -215,5 +228,15 @@ class Transaction
     public function getSpecification(): ?string
     {
         return $this->specification;
+    }
+
+    public function getSenderBic(): ?string
+    {
+        return $this->senderBic;
+    }
+
+    public function getPayerReference(): ?string
+    {
+        return $this->payerReference;
     }
 }

@@ -17,6 +17,8 @@ class TransactionListTest extends \PHPUnit\Framework\TestCase
         Assert::assertSame(1000.0, $transactionList->getClosingBalance());
         Assert::assertEquals(new \DateTimeImmutable('2015-03-30+0200'), $transactionList->getDateStart());
         Assert::assertEquals(new \DateTimeImmutable('2015-03-31+0200'), $transactionList->getDateEnd());
+        Assert::assertNull($transactionList->getYearList());
+        Assert::assertNull($transactionList->getIdList());
         Assert::assertSame((float) 1111111111, $transactionList->getIdFrom());
         Assert::assertSame((float) 1111111999, $transactionList->getIdTo());
         Assert::assertNull($transactionList->getIdLastDownload());
@@ -36,5 +38,15 @@ class TransactionListTest extends \PHPUnit\Framework\TestCase
         Assert::assertNull($transactionList->getIdTo());
         Assert::assertNull($transactionList->getIdLastDownload());
         Assert::assertCount(0, $transactionList->getTransactions());
+    }
+
+    public function testStatementIdentificationIsSet(): void
+    {
+        $transactionList = json_decode((string) file_get_contents(__DIR__ . '/data/example-statement-response.json'));
+
+        $transactionList = TransactionList::create($transactionList->accountStatement);
+
+        Assert::assertSame(2017, $transactionList->getYearList());
+        Assert::assertSame(8, $transactionList->getIdList());
     }
 }

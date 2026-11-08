@@ -42,6 +42,24 @@ class UrlBuilder
         );
     }
 
+    public function buildByIdUrl(int $year, int $id): string
+    {
+        return sprintf(
+            self::BASE_URL . 'by-id/%s/%d/%d/transactions.json',
+            $this->getToken(),
+            $year,
+            $id
+        );
+    }
+
+    public function buildLastStatementUrl(): string
+    {
+        return sprintf(
+            self::BASE_URL . 'lastStatement/%s/statement',
+            $this->getToken()
+        );
+    }
+
     public function buildLastUrl(): string
     {
         return sprintf(

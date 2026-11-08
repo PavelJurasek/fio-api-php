@@ -38,4 +38,22 @@ class UrlBuilderTest extends \PHPUnit\Framework\TestCase
             )
         );
     }
+
+    public function testBuildByIdUrlReturnValidUrl(): void
+    {
+        $urlBuilder = new UrlBuilder('token1');
+        Assert::assertSame(
+            'https://fioapi.fio.cz/v1/rest/by-id/token1/2012/1/transactions.json',
+            $urlBuilder->buildByIdUrl(2012, 1)
+        );
+    }
+
+    public function testBuildLastStatementUrlReturnValidUrl(): void
+    {
+        $urlBuilder = new UrlBuilder('token1');
+        Assert::assertSame(
+            'https://fioapi.fio.cz/v1/rest/lastStatement/token1/statement',
+            $urlBuilder->buildLastStatementUrl()
+        );
+    }
 }

@@ -28,6 +28,7 @@ foreach ($transactionList->getTransactions() as $transaction) {
 #### Available endpoints:
 - `downloadFromTo(DateTimeInterface $from, DateTimeInterface $to): TransactionList`
 - `downloadSince(DateTimeInterface $since): TransactionList`
+- `downloadStatement(int $year, int $id): TransactionList` - downloads an official statement
 - `downloadLast(): TransactionList`
 - `setLastId(string $id)` - sets the last downloaded ID through the API
 
@@ -49,6 +50,9 @@ Changelog
 ## Unreleased
 - **BC break:** minimal supported version is PHP 8.2
 - **BC break:** requires `guzzlehttp/guzzle` `^7.15.2 || ^8.0.1` (Guzzle 6 and older Guzzle 7 versions have known security issues)
+- added `Transaction::getSenderBic()` (column26) and `Transaction::getPayerReference()` (column27)
+- added `TransactionList::getYearList()` and `TransactionList::getIdList()`
+- added `Downloader::downloadStatement()` for official statements (`by-id` endpoint)
 
 ## 5.0.0 (2024-06-07)
 - [#31](https://github.com/mhujer/fio-api-php/pull/31) add `composer/ca-bundle` as a required dependency instead of bundled root cert (thx @feldsam!)

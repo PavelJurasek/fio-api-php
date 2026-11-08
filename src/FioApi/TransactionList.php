@@ -17,6 +17,12 @@ class TransactionList
     /** @var \DateTimeImmutable */
     protected $dateEnd;
 
+    /** @var int|null */
+    protected $yearList;
+
+    /** @var int|null */
+    protected $idList;
+
     /** @var float|null */
     protected $idFrom;
 
@@ -37,6 +43,8 @@ class TransactionList
         float $closingBalance,
         \DateTimeImmutable $dateStart,
         \DateTimeImmutable $dateEnd,
+        ?int $yearList,
+        ?int $idList,
         ?float $idFrom,
         ?float $idTo,
         ?int $idLastDownload,
@@ -46,6 +54,8 @@ class TransactionList
         $this->closingBalance = $closingBalance;
         $this->dateStart = $dateStart;
         $this->dateEnd = $dateEnd;
+        $this->yearList = $yearList;
+        $this->idList = $idList;
         $this->idFrom = $idFrom;
         $this->idTo = $idTo;
         $this->idLastDownload = $idLastDownload;
@@ -79,6 +89,8 @@ class TransactionList
             $data->info->closingBalance,
             new \DateTimeImmutable($data->info->dateStart),
             new \DateTimeImmutable($data->info->dateEnd),
+            $data->info->yearList ?? null,
+            $data->info->idList ?? null,
             $data->info->idFrom,
             $data->info->idTo,
             $data->info->idLastDownload,
@@ -110,6 +122,16 @@ class TransactionList
     public function getDateEnd(): \DateTimeImmutable
     {
         return $this->dateEnd;
+    }
+
+    public function getYearList(): ?int
+    {
+        return $this->yearList;
+    }
+
+    public function getIdList(): ?int
+    {
+        return $this->idList;
     }
 
     public function getIdFrom(): ?float

@@ -73,6 +73,32 @@ class DownloaderTest extends \PHPUnit\Framework\TestCase
         Assert::assertCount(3, $transactionList->getTransactions());
     }
 
+    public function testDownloaderDownloadsStatement(): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+
+        $handler = HandlerStack::create(new MockHandler([
+            new Response(200, [], (string) file_get_contents(__DIR__ . '/data/example-statement-response.json')),
+        ]));
+        $handler->push($history);
+        $downloader = new Downloader('validToken', new Client(['handler' => $handler]));
+
+        $transactionList = $downloader->downloadStatement(2017, 8);
+
+        Assert::assertIsArray($container);
+        Assert::assertCount(1, $container);
+
+        /** @var \GuzzleHttp\Psr7\Request $request */
+        $request = $container[0]['request'];
+
+        Assert::assertSame(
+            'https://fioapi.fio.cz/v1/rest/by-id/validToken/2017/8/transactions.json',
+            (string) $request->getUri()
+        );
+        Assert::assertSame(8, $transactionList->getIdList());
+    }
+
     public function testDownloaderSetsLastId(): void
     {
         $container = [];

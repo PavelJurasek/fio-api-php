@@ -48,6 +48,12 @@ class Downloader
         return $this->downloadFromTo($since, new \DateTimeImmutable());
     }
 
+    public function downloadStatement(int $year, int $id): TransactionList
+    {
+        $url = $this->urlBuilder->buildByIdUrl($year, $id);
+        return $this->downloadTransactionsList($url);
+    }
+
     public function downloadLast(): TransactionList
     {
         $url = $this->urlBuilder->buildLastUrl();
